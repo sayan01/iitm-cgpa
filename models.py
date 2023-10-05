@@ -19,22 +19,26 @@ class Grade(enum.Enum):
     C = 7
     D = 6
     E = 4
-    U = 0
-    P = 0
-    F = 0
-    W = 0
-    I = 0
 
 class User(db.Model):
-    session_id = db.Column(db.String(256), primary_key=True)
+    session_id = db.Column(db.String(36), primary_key=True)
     creation = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     level = db.Column(db.Enum(Level), nullable=False)
     cgpa = db.Column(db.Float, nullable=True, default=None)
 
     user_courses = db.relationship('UserCourse', backref='user', lazy=True)
 
+    def calculate_cgpa(self):
+        total_credits = 0
+        total_grade_points = 0
+        for user_course in self.user_courses:
+            total_credits += user_course.course.course_credits
+            total_grade_points += user_course.course.course_credits * user_course.grade.value
+        self.cgpa = total_grade_points / total_credits
+        db.session.commit()
+
 class UserCourse(db.Model):
-    session_id = db.Column(db.String(256), db.ForeignKey('user.session_id'), primary_key=True)
+    session_id = db.Column(db.String(36), db.ForeignKey('user.session_id'), primary_key=True)
     course_code = db.Column(db.String(10), db.ForeignKey('course.course_code'), primary_key=True)
     grade = db.Column(db.Enum(Grade), nullable=False)
 
@@ -47,6 +51,7 @@ class Course(db.Model):
 
     course_prereq = db.relationship('Prerequisite', backref='course', lazy=True)
     course_coreq = db.relationship('Corequisite', backref='course', lazy=True)
+    user_courses = db.relationship('UserCourse', backref='course', lazy=True)
 
 class Prerequisite(db.Model):
     course_code = db.Column(db.String(10), db.ForeignKey('course.course_code'), primary_key=True)
