@@ -1,0 +1,66 @@
+
+{% extends 'parent.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h1 class="display-5 fw-bold mb-4">What's this?</h1>
+    <p class="fs-4 text-justify">
+        This is an unofficial tool to calculate your CGPA for IITM BS programme students.
+        This is created by 
+        <a href="https://sayn.work">Sayan Ghosh</a>, 
+        and is not affiliated with IITM in any way.
+        The application is updated as of writing this disclaimer to the current curriculum,
+        however no guarantee is given that it is free of errors.
+
+        <br><br>
+
+        The source code for this application is available on 
+        <a href="https://github.com/sayan01/iitm-cgpa" class="">GitHub</a>.
+        Please create an issue if you find any bugs or have any suggestions.
+    </p>
+    <hr class="my-5">
+    <h1 class="display-5 fw-bold mb-4">How CGPA is Calculated?</h1>
+    <p class="fs-4 text-justify">
+        CGPA or cumulative grade point average is calculated by taking the 
+        weighted average of the grade points obtained in all the courses
+        taken by the student. The weightage of each course is the number of
+        credits assigned to it. 
+    </p>
+    <h2 class="display-6 fw-bold my-4">More Details:</h2>
+    <p class="fs-4 text-justify">
+        For more details please refer to the second page of the
+        marks card issued by IITM. The following is the pdf of the same.
+    </p>
+    <object data="{{url_for('static', filename='pdf/iitm-cgpa-explanation.pdf')}}"
+        type="application/pdf" width="50%"
+        class="pdf mx-auto d-block"
+    ></object>
+</div>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block style %}
+
+<style>
+    .text-justify{
+        text-align: justify;
+    }
+    p a {
+        --col: #1a4fa0;
+        color: var(--col);
+        text-decoration: none;
+        border-bottom: 2px dotted var(--col);
+        transition: all 0.15s ease;
+    }
+    p a:hover{
+        filter: saturate(10);
+    }
+    .pdf{
+        height: 100svh;
+    }
+</style>
+
+{% endblock %}

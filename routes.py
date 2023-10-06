@@ -11,7 +11,7 @@ from functools import wraps
 def auth_required(func):
     @wraps(func)
     def inner(*args, **kwargs):
-        if 'session_id' not in session or User.get(session['session_id']) is None:
+        if 'session_id' not in session or User.query.get(session['session_id']) is None:
             flash('You must select a level first')
             return redirect(url_for('level_get'))
         return func(*args, **kwargs)
@@ -22,11 +22,15 @@ def auth_required(func):
 def index():
     return render_template('index.html')
 
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
 @app.route('/level', methods=['GET'])
 def level_get():
     level = Level.FOUNDATION.value
     if 'session_id' in session:
-        user = User.get(session['session_id'])
+        user = User.query.get(session['session_id'])
         if user:
             level = user.level.value
     return render_template('level.html', level=level)
@@ -36,10 +40,10 @@ def level_post():
     try:
         level = Level(int(request.form['level']))
     except:
-        flash('Invalid level')
+        flash('Invalid level ' + request.form['level'])
         return redirect(url_for('level_get'))
     if 'session_id' in session:
-        user = User.get(session['session_id'])
+        user = User.query.get(session['session_id'])
         if not user:
             user = User(session_id=session['session_id'], level=level)
             db.session.add(user)
@@ -47,7 +51,7 @@ def level_post():
             user.level = level
     else:
         session_id = str(uuid4())
-        while User.get(session_id) is not None:
+        while User.query.get(session_id) is not None:
             session_id = str(uuid4())
         session['session_id'] = session_id
         user = User(session_id=session_id, level=level)
@@ -59,7 +63,7 @@ def level_post():
 @app.route('/courses', methods=['GET'])
 @auth_required
 def courses_get():
-    user = User.get(session['session_id'])
+    user = User.query.get(session['session_id'])
     user_courses = user.user_courses
     courses = []
     for level in range(Level.FOUNDATION.value, user.level.value + 1):
@@ -69,7 +73,7 @@ def courses_get():
 @app.route('/courses', methods=['POST'])
 @auth_required
 def courses_post():
-    user = User.get(session['session_id'])
+    user = User.query.get(session['session_id'])
     for course_code in request.form:
         if course_code == 'csrf_token':
             continue
@@ -99,7 +103,10 @@ def courses_post():
 @app.route('/cgpa', methods=['GET'])
 @auth_required
 def cgpa_get():
-    user = User.get(session['session_id'])
+    user = User.query.get(session['session_id'])
+    if not user.cgpa:
+        flash('You have not completed any courses')
+        return redirect(url_for('courses_get'))
     return render_template('cgpa.html', cgpa=user.cgpa)
 
 @app.route('/forgetme', methods=['GET'])

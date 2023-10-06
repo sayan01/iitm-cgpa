@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">IITM-CGPA</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="{{url_for('index')}}">Home</a>
+        <a class="nav-link" href="{{url_for('level_get')}}">Level</a>
+        {% if 'session_id' in session %}
+            <a class="nav-link" href="{{url_for('courses_get')}}">Courses</a>
+            <a class="nav-link" href="{{url_for('cgpa_get')}}">CGPA</a>
+        {% endif %}
+     </div>
+      <div class="navbar-nav">
+        <a class="nav-link" href="{{url_for('help')}}">
+            <i class="fas fa-info-circle    "></i>
+            What is this?</a>
+     </div>
+    </div>
+  </div>
+</nav>
+
+<!-- show flashed messages -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'success' in message.lower() %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% else %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
+<style>
+    .navbar-collapse{
+        display: flex;
+        justify-content: space-between;
+    }
+    @media ( width < 992px){
+        .navbar-collapse{
+            flex-direction: column;
+        }
+    }
+</style>

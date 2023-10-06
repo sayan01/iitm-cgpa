@@ -1,0 +1,43 @@
+{% extends 'parent.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="container">
+    <h1 class="display-1 fw-bold my-4">Level</h1>
+    <hr>
+    <p class="fs-3">
+        Which level are you in?
+        <span class="text-muted fs-5 ms-3">(Choose your current level from the dropdown)</span>
+    </p>
+    <form action="" method="post">
+        <span class="text-success fs-3">&gt; </span>
+        <span class="fs-3">I am currently in </span>
+        <select name="level" id="level" class="level-select form-control d-inline w-auto">
+            <option value="1">Foundation</option>
+            <option value="2">Diploma</option>
+            <option value="3">Degree</option>
+        </select>
+        <span class="fs-3">Level</span>
+        <div class="submit-container mt-5 text-center">
+            <button type="submit" class="btn btn-success">
+                <span class="mx-2">Save and Continue </span>
+                <i class="fas fa-arrow-right    "></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block style %}
+<style>
+    .btn{
+        border-radius: 100px;
+    }
+</style>
+
+{% endblock %}
