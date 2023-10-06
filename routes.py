@@ -70,18 +70,37 @@ def courses_get():
 @auth_required
 def courses_post():
     user = User.get(session['session_id'])
-    user_courses = user.user_courses
-    for user_course in user_courses:
-        db.session.delete(user_course)
     for course_code in request.form:
         if course_code == 'csrf_token':
             continue
-        grade = Grade(int(request.form[course_code]))
-        user_course = UserCourse(session_id=session['session_id'], course_code=course_code, grade=grade)
-        db.session.add(user_course)
+        for c in Course.get(course_code).course_prereq:
+            if c.prereq_code not in request.form:
+                flash('You have not met the prerequisites for ' + course_code)
+                return redirect(url_for('courses_get'))
+        for c in Course.get(course_code).course_coreq:
+            if c.coreq_code not in request.form:
+                flash('You have not met the corequisites for ' + course_code)
+                return redirect(url_for('courses_get'))
+        try:
+            grade = Grade(int(request.form[course_code]))
+        except:
+            flash('Invalid grade for ' + course_code)
+            return redirect(url_for('courses_get'))
+        user_course = UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first()
+        if user_course:
+            user_course.grade = grade
+        else:
+            user_course = UserCourse(session_id=session['session_id'], course_code=course_code, grade=grade)
+            db.session.add(user_course)
     db.session.commit()
     user.calculate_cgpa()
-    return redirect(url_for('courses_get'))
+    return redirect(url_for('cgpa_get'))
+
+@app.route('/cgpa', methods=['GET'])
+@auth_required
+def cgpa_get():
+    user = User.get(session['session_id'])
+    return render_template('cgpa.html', cgpa=user.cgpa)
 
 @app.route('/forgetme', methods=['GET'])
 def forgetme():
