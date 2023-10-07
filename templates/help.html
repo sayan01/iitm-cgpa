@@ -35,7 +35,29 @@
         type="application/pdf" width="50%"
         class="pdf mx-auto d-block"
     ></object>
+    <hr class="my-5">
+    <h1 class="display-5 fw-bold mb-4">How to Use?</h1>
+    <p class="fs-4 text-justify">
+        The application is fairly simple to use. You can start by clicking on the
+        <a href="{{url_for('level_get')}}">Start</a>
+        button on the home page. You will be asked to select your current level.
+        After that you will be asked to enter your grades in the courses you have
+        completed. You can leave the grade as '-' if you have not completed the course.
+        After entering the grades you will be shown your CGPA.
+    </p>
+    <hr class="my-5">
+    <h1 class="display-5 fw-bold mb-4">Data Collection Policy</h1>
+    <p class="fs-4 text-justify">
+        This application uses cookies to store your session id. This is used to
+        identify you as a user and to store your data. The data is stored in the
+        server and is not shared with anyone. The data is deleted after 365 days
+        of inactivity. You can delete your data by clicking on the 
+        <a href="{{url_for('forgetme')}}">Delete Data</a>
+        button.
+    </p>
+    <hr class="my-5">
 </div>
+{% include 'footer.html' %}
 {% endblock %}
 
 {% block script %}
@@ -48,15 +70,21 @@
     .text-justify{
         text-align: justify;
     }
-    p a {
-        --col: #1a4fa0;
-        color: var(--col);
+    a{
         text-decoration: none;
-        border-bottom: 2px dotted var(--col);
         transition: all 0.15s ease;
     }
-    p a:hover{
+    a:hover{
+        padding: 0 0.5rem;
+    }
+    .text-justify a {
+        --col: #1a4fa0;
+        color: var(--col);
+        border-bottom: 2px dotted var(--col);
+    }
+    .text-justify a:hover{
         filter: saturate(10);
+        border-bottom: 2px solid var(--col);
     }
     .pdf{
         height: 100svh;

@@ -120,7 +120,11 @@ def cgpa_get():
     if not user.cgpa:
         flash('You have not completed any courses')
         return redirect(url_for('courses_get'))
-    return render_template('cgpa.html', cgpa=user.cgpa)
+    cgpa = user.cgpa
+    cgpa = round(cgpa, 2)
+    # always 2 decimal places
+    cgpa = '{:.2f}'.format(cgpa)
+    return render_template('cgpa.html', cgpa=cgpa)
 
 @app.route('/forgetme', methods=['GET'])
 def forgetme():

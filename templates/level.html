@@ -2,6 +2,9 @@
 {% block content %}
 {% include 'navbar.html' %}
 
+<div class="wrapper">
+
+
 <div class="container">
     <h1 class="display-1 fw-bold my-4">Level</h1>
     <hr>
@@ -18,7 +21,7 @@
             {% endfor %}
         </select>
         <span class="fs-3">Level</span>
-        <div class="submit-container mt-5 text-center">
+        <div class="submit-container my-5 text-center">
             <button type="submit" class="btn btn-success">
                 <i class="fas fa-save    "></i>
                 <span class="mx-2">Save and Continue </span>
@@ -27,6 +30,9 @@
     </form>
 </div>
 
+{% include 'footer.html' %}
+
+</div>
 {% endblock %}
 
 {% block script %}
@@ -35,6 +41,30 @@
 
 {% block style %}
 <style>
+    .wrapper{
+        min-height: calc(100vh - 56px);
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+     h1.display-1 {
+        color: transparent;
+        display: inline-block;
+        background: linear-gradient(-45deg, black, black, black, black, black, black, black, black, black, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3, black, black, black, black, black, black, black, black, black);
+        background-size: 1200% 1200%;
+        background-clip: text;
+        -webkit-background-clip: text;
+    }
+    h1.display-1:hover{
+        animation: rainbow 2s linear normal;
+        cursor: help;
+    }
+    @keyframes rainbow { 
+        0%{background-position:0% 0%}
+        50%{background-position:50% 0%}
+        100%{background-position:100% 0%}
+    }
     #level{
         font-size: 1.5rem;
     }
