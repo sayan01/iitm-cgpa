@@ -28,12 +28,13 @@ def help():
 
 @app.route('/level', methods=['GET'])
 def level_get():
-    level = Level.FOUNDATION.value
+    level = Level.FOUNDATION
     if 'session_id' in session:
         user = User.query.get(session['session_id'])
         if user:
-            level = user.level.value
-    return render_template('level.html', level=level)
+            level = user.level
+    levels = Level.__members__.values()
+    return render_template('level.html', levels=levels, level=level)
 
 @app.route('/level', methods=['POST'])
 def level_post():
@@ -57,7 +58,7 @@ def level_post():
         user = User(session_id=session_id, level=level)
         db.session.add(user)
     db.session.commit()
-    return redirect(url_for('courses', session_id=session_id))
+    return redirect(url_for('courses_get'))
 
 
 @app.route('/courses', methods=['GET'])
@@ -65,10 +66,12 @@ def level_post():
 def courses_get():
     user = User.query.get(session['session_id'])
     user_courses = user.user_courses
+    user_courses = {user_course.course_code: user_course.grade.value for user_course in user_courses}
     courses = []
     for level in range(Level.FOUNDATION.value, user.level.value + 1):
         courses.extend(Course.query.filter_by(course_level=Level(level)).all())
-    return render_template('courses.html', courses=courses, user_courses=user_courses, level=user.level, cgpa=user.cgpa)
+    grades = Grade.__members__.values()
+    return render_template('courses.html', courses=courses, user_courses=user_courses, level=user.level, grades=grades)
 
 @app.route('/courses', methods=['POST'])
 @auth_required
@@ -77,12 +80,22 @@ def courses_post():
     for course_code in request.form:
         if course_code == 'csrf_token':
             continue
-        for c in Course.get(course_code).course_prereq:
-            if c.prereq_code not in request.form:
+        if not Course.query.get(course_code):
+            flash('Invalid course ' + course_code)
+            return redirect(url_for('courses_get'))
+        if request.form[course_code] == '0':
+            if UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first():
+                db.session.delete(UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first())
+                db.session.commit()
+            continue
+        for c in Course.query.get(course_code).course_prereq:
+            if c.prereq_code not in request.form or request.form[c.prereq_code] == '0':
                 flash('You have not met the prerequisites for ' + course_code)
+                if int(course_code[4]) > int(c.prereq_code[4]):
+                    flash('Make sure you have completed all the courses in the previous levels')
                 return redirect(url_for('courses_get'))
-        for c in Course.get(course_code).course_coreq:
-            if c.coreq_code not in request.form:
+        for c in Course.query.get(course_code).course_coreq:
+            if c.coreq_code not in request.form or request.form[c.coreq_code] == '0':
                 flash('You have not met the corequisites for ' + course_code)
                 return redirect(url_for('courses_get'))
         try:

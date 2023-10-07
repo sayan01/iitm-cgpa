@@ -13,15 +13,15 @@
         <span class="text-success fs-3">&gt; </span>
         <span class="fs-3">I am currently in </span>
         <select name="level" id="level" class="level-select form-control d-inline w-auto">
-            <option value="1">Foundation</option>
-            <option value="2">Diploma</option>
-            <option value="3">Degree</option>
+            {% for l in levels %}
+                <option value="{{l.value}}" {% if l.value == level.value %}selected{% endif %}>{{l.name.capitalize()}}</option>
+            {% endfor %}
         </select>
         <span class="fs-3">Level</span>
         <div class="submit-container mt-5 text-center">
             <button type="submit" class="btn btn-success">
+                <i class="fas fa-save    "></i>
                 <span class="mx-2">Save and Continue </span>
-                <i class="fas fa-arrow-right    "></i>
             </button>
         </div>
     </form>
@@ -35,8 +35,34 @@
 
 {% block style %}
 <style>
+    #level{
+        font-size: 1.5rem;
+    }
     .btn{
         border-radius: 100px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+        transition: all 0.5s ease;
+    }
+    .btn span{
+        transition: all 0.5s ease;
+        opacity: 0;
+    }
+    .btn .fas{
+        transition: all 0.75s ease;
+        margin-left: 0.25rem;
+    }
+    .btn:hover{
+        width: 225px;
+    }
+    .btn:hover .fas{
+        transform: rotateX(360deg);
+    }
+    .btn:hover span{
+        opacity: 1;
     }
 </style>
 

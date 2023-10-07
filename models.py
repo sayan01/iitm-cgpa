@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
 import enum
+import json
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -29,6 +30,10 @@ class User(db.Model):
     user_courses = db.relationship('UserCourse', backref='user', lazy=True)
 
     def calculate_cgpa(self):
+        if len(self.user_courses) == 0:
+            self.cgpa = None
+            db.session.commit()
+            return
         total_credits = 0
         total_grade_points = 0
         for user_course in self.user_courses:
@@ -49,8 +54,8 @@ class Course(db.Model):
     course_type = db.Column(db.String(20), nullable=False)
     course_level = db.Column(db.Enum(Level), nullable=False)
 
-    course_prereq = db.relationship('Prerequisite', backref='course', lazy=True)
-    course_coreq = db.relationship('Corequisite', backref='course', lazy=True)
+    course_prereq = db.relationship('Prerequisite', backref='course', lazy=True, foreign_keys='Prerequisite.course_code')
+    course_coreq = db.relationship('Corequisite', backref='course', lazy=True, foreign_keys='Corequisite.course_code')
     user_courses = db.relationship('UserCourse', backref='course', lazy=True)
 
 class Prerequisite(db.Model):
@@ -63,3 +68,37 @@ class Corequisite(db.Model):
 
 with app.app_context():
     db.create_all()
+    # add all the courses into the database
+    with open('iitm-courses.json') as f:
+        courses = json.load(f)
+    for course in courses:
+        course_code = course['course_code']
+        course_name = course['course_name']
+        course_credits = int(course['course_credits'])
+        course_type = course['course_type']
+        course_level = Level(int(course['course_level']))
+        c = Course.query.get(course_code)
+        if c:
+            c.course_name = course_name
+            c.course_credits = course_credits
+            c.course_type = course_type
+            c.course_level = course_level
+        else:
+            db.session.add(Course(course_code=course_code, course_name=course_name, course_credits=course_credits, course_type=course_type, course_level=course_level))
+        prereq = course['course_prereq']
+        for p in prereq:
+            if Prerequisite.query.filter_by(course_code=course_code, prereq_code=p).first():
+                continue
+            db.session.add(Prerequisite(course_code=course_code, prereq_code=p))
+        for p in Prerequisite.query.filter_by(course_code=course_code).all():
+            if p.prereq_code not in prereq:
+                db.session.delete(p)
+        coreq = course['course_coreq']
+        for c in coreq:
+            if Corequisite.query.filter_by(course_code=course_code, coreq_code=c).first():
+                continue
+            db.session.add(Corequisite(course_code=course_code, coreq_code=c))
+        for c in Corequisite.query.filter_by(course_code=course_code).all():
+            if c.coreq_code not in coreq:
+                db.session.delete(c)
+        db.session.commit()

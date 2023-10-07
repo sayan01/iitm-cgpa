@@ -1,0 +1,108 @@
+{% extends 'parent.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="container">
+    <h1 class="display-1 fw-bold my-4">Courses</h1>
+    <hr>
+    <p class="fs-3">
+        Which courses have you completed?
+        <span class="text-muted fs-5 ms-2">
+            (Choose your grade in each course from the dropdown, leave blank if not done)
+        </span>
+    </p>
+    <form action="" method="POST">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Course Code</th>
+                    <th scope="col">Course Name</th>
+                    <th scope="col">Course Type</th>
+                    <th scope="col">Level</th>
+                    <th scope="col">Credits</th>
+                    <th scope="col">Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                    <tr>
+                        <td>{{course.course_code}}</td>
+                        <td>{{course.course_name}}</td>
+                        <td>{{course.course_type}}</td>
+                        <td>{{course.course_level.name.capitalize()}}</td>
+                        <td>{{course.course_credits}}</td>
+                        <td>
+                            <select name="{{course.course_code}}" id="{{course.course_code}}" class="grade-select form-control d-inline w-auto">
+                                <option value="0" {% if user_courses.get(course.course_code, 0) == 0 %}selected{% endif %}>-</option>
+                                {% for g in grades %}
+                                    <option value="{{g.value}}" {% if g.value == user_courses.get(course.course_code, 0) %}selected{% endif %}>{{g.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="submit-container my-5 text-center">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save    "></i>
+                <span class="mx-2">Save and Continue </span>
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block style %}
+<style>
+     h1.display-1 {
+        color: transparent;
+        display: inline-block;
+        background: linear-gradient(-45deg, black, black, black, black, black, black, black, black, black, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3, black, black, black, black, black, black, black, black, black);
+        background-size: 1200% 1200%;
+        background-clip: text;
+        -webkit-background-clip: text;
+    }
+    h1.display-1:hover{
+        animation: rainbow 2s linear normal;
+        cursor: help;
+    }
+    @keyframes rainbow { 
+        0%{background-position:0% 0%}
+        50%{background-position:50% 0%}
+        100%{background-position:100% 0%}
+    }
+    .btn{
+        border-radius: 100px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+        transition: all 0.5s ease;
+    }
+    .btn span{
+        transition: all 0.5s ease;
+        opacity: 0;
+    }
+    .btn .fas{
+        transition: all 0.75s ease;
+        margin-left: 0.25rem;
+    }
+    .btn:hover{
+        width: 225px;
+    }
+    .btn:hover .fas{
+        transform: rotateX(360deg);
+    }
+    .btn:hover span{
+        opacity: 1;
+    }
+</style>
+
+{% endblock %}
