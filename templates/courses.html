@@ -17,10 +17,10 @@
                 <tr>
                     <th scope="col">Course Code</th>
                     <th scope="col">Course Name</th>
+                    <th scope="col">Grade</th>
                     <th scope="col">Course Type</th>
                     <th scope="col">Level</th>
                     <th scope="col">Credits</th>
-                    <th scope="col">Grade</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,23 +28,26 @@
                     <tr>
                         <td>{{course.course_code}}</td>
                         <td>{{course.course_name}}</td>
-                        <td>{{course.course_type}}</td>
-                        <td>{{course.course_level.name.capitalize()}}</td>
-                        <td>{{course.course_credits}}</td>
                         <td>
                             <select name="{{course.course_code}}" id="{{course.course_code}}" class="grade-select form-control d-inline w-auto">
-                                <option value="0" {% if user_courses.get(course.course_code, 0) == 0 %}selected{% endif %}>-</option>
+                                <option value="0" {% if user_courses.get(course.course_code, 0) == 0 %}selected{% endif %}></option>
                                 {% for g in grades %}
                                     <option value="{{g.value}}" {% if g.value == user_courses.get(course.course_code, 0) %}selected{% endif %}>{{g.name}}</option>
                                 {% endfor %}
                             </select>
+                            <button type="button" class="btn btn-outline-danger" onclick="document.getElementById('{{course.course_code}}').value = 0;">
+                                <i class="fas fa-backspace    "></i>
+                            </button>
                         </td>
+                        <td>{{course.course_type}}</td>
+                        <td>{{course.course_level.name.capitalize()}}</td>
+                        <td>{{course.course_credits}}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
         <div class="submit-container my-5 text-center">
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success round-button">
                 <i class="fas fa-save    "></i>
                 <span class="mx-2">Save and Continue </span>
             </button>
@@ -73,12 +76,15 @@
         animation: rainbow 2s linear normal;
         cursor: help;
     }
+    form{
+        overflow-x: auto;
+    }
     @keyframes rainbow { 
         0%{background-position:0% 0%}
         50%{background-position:50% 0%}
         100%{background-position:100% 0%}
     }
-    .btn{
+    .round-button{
         border-radius: 100px;
         white-space: nowrap;
         overflow-x: hidden;
@@ -87,21 +93,21 @@
         font-size: 1.25rem;
         transition: all 0.5s ease;
     }
-    .btn span{
+    .round-button span{
         transition: all 0.5s ease;
         opacity: 0;
     }
-    .btn .fas{
+    .round-button .fas{
         transition: all 0.75s ease;
         margin-left: 0.25rem;
     }
-    .btn:hover{
+    .round-button:hover{
         width: 225px;
     }
-    .btn:hover .fas{
+    .round-button:hover .fas{
         transform: rotateX(360deg);
     }
-    .btn:hover span{
+    .round-button:hover span{
         opacity: 1;
     }
 </style>

@@ -37,6 +37,8 @@ class User(db.Model):
         total_credits = 0
         total_grade_points = 0
         for user_course in self.user_courses:
+            if user_course.grade.value < 1:
+                continue
             total_credits += user_course.course.course_credits
             total_grade_points += user_course.course.course_credits * user_course.grade.value
         self.cgpa = total_grade_points / total_credits

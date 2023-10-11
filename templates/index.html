@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<div class="jumbotron p-5">
-    <div class="container-fluid py-5 px-5 text-center">
-        <h1 class="fw-bold">
+<div class="jumbotron">
+    <div class="container-fluid text-center">
+        <h1 class="fw-bold display-1">
             CGPA Calculator
         </h1>
         <p class="fs-2">
@@ -26,14 +26,18 @@
     .jumbotron{
         min-height: 100svh;
         overflow: hidden;
-        background: linear-gradient(rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60)),url("{{ url_for('static' , filename='img/bg/organized-table-bg.jpg') }}");
+        background: linear-gradient(rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60)),url("{{ url_for('static' , filename='img/bg/organized-table-bg.webp') }}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         color: #eee;
     }
+    .jumbotron .container-fluid, .jumbotron{
+        padding: calc(1rem + 2.5vw);
+
+    }
     .jumbotron h1 {
-        font-size: 10rem;
+        font-size: calc(2rem + 5.5vw);
         margin-top: 25svh;
     }
     .start{

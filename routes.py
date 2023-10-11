@@ -77,12 +77,13 @@ def courses_get():
 @auth_required
 def courses_post():
     user = User.query.get(session['session_id'])
+    invalid = False
     for course_code in request.form:
         if course_code == 'csrf_token':
             continue
         if not Course.query.get(course_code):
             flash('Invalid course ' + course_code)
-            return redirect(url_for('courses_get'))
+            invalid = True
         if request.form[course_code] == '0':
             if UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first():
                 db.session.delete(UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first())
@@ -90,19 +91,18 @@ def courses_post():
             continue
         for c in Course.query.get(course_code).course_prereq:
             if c.prereq_code not in request.form or request.form[c.prereq_code] == '0':
-                flash('You have not met the prerequisites for ' + course_code)
+                flash('You have not met the prerequisites for ' + course_code + ', which is: ' + c.prereq_code)
                 if int(course_code[4]) > int(c.prereq_code[4]):
                     flash('Make sure you have completed all the courses in the previous levels')
-                return redirect(url_for('courses_get'))
+                invalid = True
         for c in Course.query.get(course_code).course_coreq:
             if c.coreq_code not in request.form or request.form[c.coreq_code] == '0':
-                flash('You have not met the corequisites for ' + course_code)
-                return redirect(url_for('courses_get'))
+                flash('Warning: You have not met the corequisites for ' + course_code + ', which is: ' + c.coreq_code)
         try:
             grade = Grade(int(request.form[course_code]))
         except:
             flash('Invalid grade for ' + course_code)
-            return redirect(url_for('courses_get'))
+            invalid = True
         user_course = UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first()
         if user_course:
             user_course.grade = grade
@@ -110,6 +110,8 @@ def courses_post():
             user_course = UserCourse(session_id=session['session_id'], course_code=course_code, grade=grade)
             db.session.add(user_course)
     db.session.commit()
+    if invalid:
+        return redirect(url_for('courses_get'))
     user.calculate_cgpa()
     return redirect(url_for('cgpa_get'))
 
