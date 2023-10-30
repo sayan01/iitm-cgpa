@@ -126,7 +126,21 @@ def cgpa_get():
     cgpa = round(cgpa, 2)
     # always 2 decimal places
     cgpa = '{:.2f}'.format(cgpa)
-    return render_template('cgpa.html', cgpa=cgpa)
+    user_courses = user.user_courses
+    courses = Course.query.all()
+    courses = [ course for course in courses if course.course_code in [user_course.course_code for user_course in user_courses] ]
+    user_courses = {user_course.course_code: user_course.grade for user_course in user_courses}
+    calculation_string = "CGPA = (\n"
+    for course in courses:
+        calculation_string += str(course.course_code) + " (" + str(course.course_credits) + " credits) * " + str(user_courses[course.course_code].value) + " grade points + "
+        calculation_string += "\n"
+    calculation_string = calculation_string[:-3]
+    calculation_string += ")\n÷\n("
+    for course in courses:
+        calculation_string += str(course.course_credits) + " + "
+    calculation_string = calculation_string[:-3]
+    calculation_string += ") credits"
+    return render_template('cgpa.html', cgpa=cgpa, courses=courses, user_courses=user_courses, level=user.level, calculation_string=calculation_string)
 
 @app.route('/forgetme', methods=['GET'])
 def forgetme():

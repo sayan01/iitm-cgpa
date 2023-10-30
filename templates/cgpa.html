@@ -1,10 +1,42 @@
 {% extends 'parent.html' %}
 {% block content %}
 {% include 'navbar.html' %}
-<div class="acontainer style">
-    <div class="center">
-        <h4 class="display-4 text-muted fw-bold cgpa cgpa-header">CGPA</h4>
-        <h1 class="display-1 fw-bold cgpa cgpa-value">{{cgpa}}</h1>
+<div class="download style">
+    <div class="acontainer">
+        <div class="center">
+            <h4 class="display-4 text-muted fw-bold cgpa cgpa-header">CGPA</h4>
+            <h1 class="display-1 fw-bold cgpa cgpa-value">{{cgpa}}</h1>
+        </div>
+    </div>
+    <div class="details">
+        <h2 class="display-5 fw-bold my-4">Details</h2>
+        <h3 class=""><span class="fw-bold">Level: </span>{{level.name.capitalize()}}</h3>
+        <h3 class="fw-bold">Grades:</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Course Code</td>
+                    <td>Course Name</td>
+                    <td>Grade</td>
+                    <td>Credits</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{course.course_code}}</td>
+                    <td>{{course.course_name}}</td>
+                    <td>{{user_courses.get(course.course_code, 0).name}}
+                        ({{user_courses.get(course.course_code, 0).value}})</td>
+                    <td>{{course.course_credits}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3 class="fw-bold">Calculation:</h3>
+        <pre wrap class="text-center">
+            {{calculation_string}}
+        </pre>
     </div>
 </div>
 <div class="text-center p-5">
@@ -19,7 +51,7 @@
 <script>
 // Get a reference to the capture button and the DOM element containing CGPA
 const captureButton = document.querySelector("#download");
-const cgpaContainer = document.querySelector(".acontainer");
+const cgpaContainer = document.querySelector(".download");
 
 // Add a click event listener to the button
 captureButton.addEventListener("click", () => {
@@ -44,6 +76,9 @@ captureButton.addEventListener("click", () => {
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: calc(50vh - 56px);
+    }
+    .download.style .acontainer{
         min-height: calc(100vh - 56px);
     }
     .center{
@@ -77,6 +112,18 @@ captureButton.addEventListener("click", () => {
         100% {
             background-position-x: 100%;
         }
+    }
+    .details{
+        overflow-x: scroll;
+        width: clamp(200px, 75%, 1000px);
+        display: grid;
+        margin: auto;
+    }
+    .details .table{
+        font-size: clamp(0.5rem, 2.5vw, 1rem);
+    }
+    .download.style .details{
+        display: none;
     }
 </style>
 {% endblock %}
