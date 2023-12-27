@@ -113,6 +113,7 @@ def courses_post():
     if invalid:
         return redirect(url_for('courses_get'))
     user.calculate_cgpa()
+    user.calculate_project_cgpa()
     return redirect(url_for('cgpa_get'))
 
 @app.route('/cgpa', methods=['GET'])
@@ -124,8 +125,13 @@ def cgpa_get():
         return redirect(url_for('courses_get'))
     cgpa = user.cgpa
     cgpa = round(cgpa, 2)
-    # always 2 decimal places
     cgpa = '{:.2f}'.format(cgpa)
+    project_cgpa = user.project_cgpa
+    if project_cgpa:
+        project_cgpa = round(project_cgpa, 2)
+        project_cgpa = '{:.2f}'.format(project_cgpa)
+    else:
+        project_cgpa = 'N/A'
     user_courses = user.user_courses
     courses = Course.query.all()
     courses = [ course for course in courses if course.course_code in [user_course.course_code for user_course in user_courses] ]
@@ -140,7 +146,9 @@ def cgpa_get():
         calculation_string += str(course.course_credits) + " + "
     calculation_string = calculation_string[:-3]
     calculation_string += ") credits"
-    return render_template('cgpa.html', cgpa=cgpa, courses=courses, user_courses=user_courses, level=user.level, calculation_string=calculation_string)
+    return render_template('cgpa.html', cgpa=cgpa, project_cgpa=project_cgpa, project_cgpa_color = ('black' if project_cgpa == 'N/A' else 'red' if float(project_cgpa) < 7 else 'green'),
+                            courses=courses, user_courses=user_courses, level=user.level,
+                              calculation_string=calculation_string)
 
 @app.route('/forgetme', methods=['GET'])
 def forgetme():

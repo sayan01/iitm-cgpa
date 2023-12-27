@@ -11,6 +11,17 @@
     <div class="details">
         <h2 class="display-5 fw-bold my-4">Details</h2>
         <h3 class=""><span class="fw-bold">Level: </span>{{level.name.capitalize()}}</h3>
+        <h3 class=""><span class="fw-bold">Project CGPA: </span>
+            <span class="maybe-red" 
+                style="color: {{project_cgpa_color}}"
+            >
+                {{project_cgpa}}
+            </span>
+            (Minimum Required: 7.0)
+            <sup>[
+                <a href="help#cgpa-criteria"><i class="fas fa-link    "></i></a>
+                ]</sup>
+        </h3>
         <h3 class="fw-bold">Grades:</h3>
         <table class="table">
             <thead>
@@ -40,7 +51,7 @@
     </div>
 </div>
 <div class="text-center">
-    <button type="button" id="download" class="btn btn-outline-primary">
+    <button type="button" id="download" class="btn btn-outline-primary my-4">
         <i class="fas fa-download    "></i>
         <span class="mx-2">Download </span>
     </button>
@@ -79,7 +90,6 @@ captureButton.addEventListener("click", () => {
         min-height: calc(45vh);
     }
     .download.style .acontainer{
-        min-height: calc(100vh - 56px - 38px - 30px);
     }
     .center{
         position: relative;
@@ -123,7 +133,6 @@ captureButton.addEventListener("click", () => {
         font-size: clamp(0.5rem, 2.5vw, 1rem);
     }
     .download.style .details{
-        display: none;
     }
 </style>
 {% endblock %}

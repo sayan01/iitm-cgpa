@@ -3,19 +3,37 @@
 {% block content %}
 {% include 'navbar.html' %}
 <div class="container mt-5">
-    <h1 class="display-5 fw-bold mb-4">What's this?</h1>
+    <h1 class="display-5 fw-bold mb-4" id="what-is-this">
+        <a href="#what-is-this">#</a>
+        What's this?</h1>
     <p class="fs-4 text-justify">
         {% include 'disclaimer.html' %}
     </p>
     <hr class="my-5">
-    <h1 class="display-5 fw-bold mb-4">How CGPA is Calculated?</h1>
+    <h1 class="display-5 fw-bold mb-4" id="how-cgpa-is-calculated">
+        <a href="#how-cgpa-is-calculated">#</a>
+        How CGPA is Calculated?</h1>
     <p class="fs-4 text-justify">
         CGPA or cumulative grade point average is calculated by taking the 
         weighted average of the grade points obtained in all the courses
         taken by the student. The weightage of each course is the number of
-        credits assigned to it. 
+        credits assigned to it. Project CGPA is calculated similarly but only
+        using Project Courses.
     </p>
-    <h2 class="display-6 fw-bold my-4">More Details:</h2>
+    <h2 id="cgpa-criteria" class="display-6 fw-bold my-4">
+        <a href="#cgpa-criteria">#</a>
+        Project CGPA Criteria:</h2>
+        <p class="fs-4 text-justify">
+        For students entering the degree level in 
+        <strong>2024 May Term </strong>
+        or later, the following criteria applies:
+        </p>
+    <div class="center">
+        <img src="{{url_for('static', filename='img/project-cgpa.jpg')}}" alt="Minimum Project CGPA Criteria">
+    </div>
+    <h2 class="display-6 fw-bold my-4" id="more-details">
+        <a href="#more-details">#</a>
+        More Details:</h2>
     <p class="fs-4 text-justify">
         For more details please refer to the second page of the
         marks card issued by IITM. The following is the pdf of the same.
@@ -25,17 +43,30 @@
         class="pdf mx-auto d-block"
     ></object>
     <hr class="my-5">
-    <h1 class="display-5 fw-bold mb-4">How to Use?</h1>
+    <h1 class="display-5 fw-bold mb-4" id="how-to-use">
+        <a href="#how-to-use">#</a>
+        How to Use?</h1>
     <p class="fs-4 text-justify">
         The application is fairly simple to use. You can start by clicking on the
         <a href="{{url_for('level_get')}}">Start</a>
         button on the home page. You will be asked to select your current level.
         After that you will be asked to enter your grades in the courses you have
         completed. You can leave the grade as '-' if you have not completed the course.
+        You can remove the grade using the 
+        <span class="btn btn-outline-danger">
+            <i class="fas fa-backspace" class="btn btn-outline-danger"
+            ></i>
+        </span>
+         button.
+        For students who completed projects as part of the theory itself in initial terms
+        they should keep the projects grade empty for accurate result.
+        Your project CGPA depends only on the project courses you have completed separately.
         After entering the grades you will be shown your CGPA.
     </p>
     <hr class="my-5">
-    <h1 class="display-5 fw-bold mb-4">Data Collection Policy</h1>
+    <h1 class="display-5 fw-bold mb-4" id="data-collection-policy">
+        <a href="#data-collection-policy">#</a>
+        Data Collection Policy</h1>
     <p class="fs-4 text-justify">
         This application uses cookies to store your session id. This is used to
         identify you as a user and to store your data. The data is stored in the
@@ -77,6 +108,13 @@
     }
     .pdf{
         height: 100svh;
+    }
+    .center{
+        display: grid;
+        place-items: center;
+    }
+    .center img{
+        max-width: 50%;
     }
 </style>
 

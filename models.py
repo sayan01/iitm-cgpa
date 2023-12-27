@@ -26,6 +26,7 @@ class User(db.Model):
     creation = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     level = db.Column(db.Enum(Level), nullable=False)
     cgpa = db.Column(db.Float, nullable=True, default=None)
+    project_cgpa = db.Column(db.Float, nullable=True, default=None)
 
     user_courses = db.relationship('UserCourse', backref='user', lazy=True)
 
@@ -43,6 +44,23 @@ class User(db.Model):
             total_grade_points += user_course.course.course_credits * user_course.grade.value
         self.cgpa = total_grade_points / total_credits
         db.session.commit()
+
+    def calculate_project_cgpa(self):
+        user_courses_project = [uc for uc in self.user_courses.copy() if uc.course.course_type == 'Project']
+        if len(user_courses_project) == 0:
+            self.project_cgpa = None
+            db.session.commit()
+            return
+        total_credits = 0
+        total_grade_points = 0
+        for user_course in user_courses_project:
+            if user_course.grade.value < 1:
+                continue
+            total_credits += user_course.course.course_credits
+            total_grade_points += user_course.course.course_credits * user_course.grade.value
+        self.project_cgpa = total_grade_points / total_credits
+        db.session.commit()
+
 
 class UserCourse(db.Model):
     session_id = db.Column(db.String(36), db.ForeignKey('user.session_id'), primary_key=True)
