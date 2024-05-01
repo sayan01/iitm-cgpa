@@ -57,7 +57,7 @@ for table in tables:
 level += 1
 
 import csv
-# read the degree level courses from the prescraped tsv file
+# read the degree level courses from the prescraped csv file
 with open(DEGREECOURSES, 'r') as ip:
     data = csv.DictReader(ip)
     for line in data:
