@@ -18,7 +18,7 @@ check_requirements(){
     echo "OK"
   else
     echo "NO, setting up"
-    if ! python -m venv "$VIRT_ENV"
+    if ! python3 -m venv "$VIRT_ENV"
     then
       echo "Unable to set up virtual env"
       rc=1
