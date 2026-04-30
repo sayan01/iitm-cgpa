@@ -1,5 +1,13 @@
 
 course_code,course_name,course_type,course_credits,course_coreq,course_prereq
+BSCS2001,Database Management Systems,Theory,4,,
+BSCS2002,"Programming, Data Structures and Algorithms using Python",Theory,4,,
+BSCS2003,Modern Application Development I,Theory,4,BSCS2001,
+BSCS2003P,Modern Application Development I - Project,Project,2,BSCS2003,
+BSCS2005,Programming Concepts using Java,Theory,4,,
+BSCS2006,Modern Application Development II,Theory,4,,BSCS2003
+BSCS2006P,Modern Application Development II - Project,Project,2,BSCS2006,BSCS2003P
+BSSE2001,System Commands,Theory,3,,
 BSCS2004,Machine Learning Foundations,Theory,4,,
 BSMS2001,Business Data Management,Theory,4,,
 BSCS2007,Machine Learning Techniques,Theory,4,BSCS2004,

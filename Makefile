@@ -1,4 +1,4 @@
-.PHONY: install run migrate upgrade import requirements
+.PHONY: install run migrate upgrade import requirements docker gcp-build gcp-deploy
 
 default: run
 
@@ -22,3 +22,9 @@ requirements:
 
 docker:
 	docker-compose up --build
+
+gcp-build:
+	./scripts/build.sh
+
+gcp-deploy:
+	./scripts/deploy.sh

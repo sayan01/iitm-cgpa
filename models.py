@@ -88,9 +88,9 @@ class Corequisite(db.Model):
 
 with app.app_context():
     db.create_all()
-    # add all the courses into the database
     with open('iitm-courses.json', encoding='utf-8') as f:
         courses = json.load(f)
+
     for course in courses:
         course_code = course['course_code']
         course_name = course['course_name']
@@ -105,6 +105,10 @@ with app.app_context():
             c.course_level = course_level
         else:
             db.session.add(Course(course_code=course_code, course_name=course_name, course_credits=course_credits, course_type=course_type, course_level=course_level))
+    db.session.commit()
+
+    for course in courses:
+        course_code = course['course_code']
         prereq = course['course_prereq']
         for p in prereq:
             if Prerequisite.query.filter_by(course_code=course_code, prereq_code=p).first():
@@ -121,4 +125,4 @@ with app.app_context():
         for c in Corequisite.query.filter_by(course_code=course_code).all():
             if c.coreq_code not in coreq:
                 db.session.delete(c)
-        db.session.commit()
+    db.session.commit()

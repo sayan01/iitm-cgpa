@@ -21,6 +21,6 @@ WORKDIR /app
 COPY --from=builder /opt/venv /opt/venv
 COPY . .
 
-EXPOSE 2472
+ENV PORT=2472
 
-CMD ["gunicorn", "-b", "0.0.0.0:2472", "app:app"]
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT} app:app"]
