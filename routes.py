@@ -118,15 +118,6 @@ def courses_post():
             if UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first():
                 db.session.delete(UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first())
             continue
-        for c in Course.query.get(course_code).course_prereq:
-            if c.prereq_code not in request.form or request.form[c.prereq_code] == '0':
-                flash('You have not met the prerequisites for ' + course_code + ', which is: ' + c.prereq_code)
-                if int(course_code[4]) > int(c.prereq_code[4]):
-                    flash('Make sure you have completed all the courses in the previous levels')
-                invalid = True
-        for c in Course.query.get(course_code).course_coreq:
-            if c.coreq_code not in request.form or request.form[c.coreq_code] == '0':
-                flash('Warning: You have not met the corequisites for ' + course_code + ', which is: ' + c.coreq_code)
         try:
             grade = Grade(int(request.form[course_code]))
         except ValueError:

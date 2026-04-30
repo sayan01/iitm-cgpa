@@ -13,3 +13,6 @@ upgrade:
 
 import:
 	uv run course-fetcher.py
+
+requirements:
+	@uv export --no-dev --no-hashes --no-header --no-annotate --frozen --no-emit-project > requirements.txt
