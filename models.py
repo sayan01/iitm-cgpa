@@ -89,7 +89,7 @@ class Corequisite(db.Model):
 with app.app_context():
     db.create_all()
     # add all the courses into the database
-    with open('iitm-courses.json') as f:
+    with open('iitm-courses.json', encoding='utf-8') as f:
         courses = json.load(f)
     for course in courses:
         course_code = course['course_code']

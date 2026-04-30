@@ -1,79 +1,64 @@
-#!/bin/env python3
-
-from bs4 import BeautifulSoup as bs
-import requests
-import re
+import csv
 import json
-def clean(s):
-    s = re.sub("\n", "", s)
-    s = re.sub("PROJECT ","", s)
-    s = s.strip()
-    s = " ".join(s.split())
-    return s
 
-URL="https://study.iitm.ac.in/ds/academics.html"
-DEGREECOURSES="degree.csv"
-OUTPUTFILE="iitm-courses.json"
-page = requests.get(URL)
-soup = bs(page.content, 'lxml')
+FOUNDATION = "foundation.csv"
+DIPLOMA = "diploma.csv"
+DEGREE = "degree.csv"
+OUTPUTFILE = "iitm-courses.json"
 
-# find all the tables
-tables = soup.find_all('table')
+
+def parse_list(field):
+    return [c.strip() for c in field.split(',') if c.strip()]
+
+
+def read_csv(path):
+    with open(path, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(filter(lambda row: row.strip(), f))
+        return list(reader)
+
 
 courses = []
-
-level = 1
 foundational = []
 diploma = []
-for table in tables:
-    ths = table.find_all('th')
-    if len(ths) == 0:
-        continue
-    if "Course Name" in "".join([th.text for th in ths]):
-        trs = table.find_all('tr')
-        for tr in trs:
-            tds = tr.find_all('td')
-            if len(tds) == 0: continue
-            prereq = tds[3].text.replace('None', '').replace(' ', '').replace(',', ' ').split()
-            coreq = tds[4].text.replace('None', '').replace(' ', '').replace(',', ' ').split()
-            if level == 1:
-                foundational.append(tds[2].text)
-            else:
-                prereq.extend(foundational)
-                diploma.append(tds[2].text)
 
-            course = {
-                'course_code': tds[2].text,
-                'course_name': clean(tds[0].text),
-                'course_credits': int(tds[1].text),
-                'course_type': 'Theory' if len(tds[2].text.strip())==8 else 'Project',
-                'course_level': level,
-                'course_prereq': prereq,
-                'course_coreq': coreq
-            }
-            courses.append(course)
-        if level == 1: level += 1
+for row in read_csv(FOUNDATION):
+    foundational.append(row['course_code'])
+    courses.append({
+        'course_code': row['course_code'],
+        'course_name': row['course_name'],
+        'course_credits': int(row['course_credits']),
+        'course_type': row['course_type'],
+        'course_level': 1,
+        'course_prereq': parse_list(row['course_prereq']),
+        'course_coreq': parse_list(row['course_coreq']),
+    })
 
-level += 1
+for row in read_csv(DIPLOMA):
+    prereq = parse_list(row['course_prereq'])
+    prereq.extend(foundational)
+    diploma.append(row['course_code'])
+    courses.append({
+        'course_code': row['course_code'],
+        'course_name': row['course_name'],
+        'course_credits': int(row['course_credits']),
+        'course_type': row['course_type'],
+        'course_level': 2,
+        'course_prereq': prereq,
+        'course_coreq': parse_list(row['course_coreq']),
+    })
 
-import csv
-# read the degree level courses from the prescraped csv file
-with open(DEGREECOURSES, 'r') as ip:
-    data = csv.DictReader(ip)
-    for line in data:
-        prereq = line['course_prereq'].replace(',',' ').split()
-        prereq.extend(diploma)
-        coreq = line['course_coreq'].replace(',',' ').split()
-        course = {
-            'course_code': line['course_code'],
-            'course_name': line['course_name'],
-            'course_credits': int(line['course_credits']),
-            'course_type': line['course_type'],
-            'course_level': level,
-            'course_prereq': prereq,
-            'course_coreq': coreq
-        }
-        courses.append(course)
+for row in read_csv(DEGREE):
+    prereq = parse_list(row['course_prereq'])
+    prereq.extend(diploma)
+    courses.append({
+        'course_code': row['course_code'],
+        'course_name': row['course_name'],
+        'course_credits': int(row['course_credits']),
+        'course_type': row['course_type'],
+        'course_level': 3,
+        'course_prereq': prereq,
+        'course_coreq': parse_list(row['course_coreq']),
+    })
 
-with open(OUTPUTFILE, 'w') as op:
-    json.dump(courses,op)
+with open(OUTPUTFILE, 'w', encoding='utf-8') as op:
+    json.dump(courses, op)

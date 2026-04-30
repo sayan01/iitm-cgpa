@@ -1,0 +1,10 @@
+
+course_code,course_name,course_type,course_credits,course_coreq,course_prereq
+BSMA1001,Mathematics for Data Science I,Theory,4,,
+BSMA1002,Statistics for Data Science I,Theory,4,,
+BSCS1001,Computational Thinking,Theory,4,,
+BSHS1001,English I,Theory,4,,
+BSMA1003,Mathematics for Data Science II,Theory,4,,BSMA1001
+BSMA1004,Statistics for Data Science II,Theory,4,BSMA1003,"BSMA1002,BSMA1001"
+BSCS1002,Programming in Python,Theory,4,,BSCS1001
+BSHS1002,English II,Theory,4,,BSHS1001

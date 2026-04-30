@@ -1,14 +1,17 @@
+"""
+Routes for the application.
+"""
 from app import app
 from flask import render_template, request, redirect, url_for, session, flash
-from models import User, Course, UserCourse, Prerequisite, Corequisite, db, Level, Grade
-from datetime import datetime
-import enum
+from models import User, Course, UserCourse, db, Level, Grade
 from uuid import uuid4
 from functools import wraps
 
 
-# decorator for auth
 def auth_required(func):
+    """
+    Decorator to guard authenticated routes using flask session.
+    """
     @wraps(func)
     def inner(*args, **kwargs):
         if 'session_id' not in session or User.query.get(session['session_id']) is None:
@@ -20,14 +23,24 @@ def auth_required(func):
 
 @app.route('/')
 def index():
+    """
+    Route for landing banner CTA.
+    """
     return render_template('index.html')
 
-@app.route('/help')
-def help():
-    return render_template('help.html')
+@app.route('/about')
+def about():
+    """
+    Route for about page and data collection policy.
+    """
+    return render_template('about.html')
 
 @app.route('/level', methods=['GET'])
 def level_get():
+    """
+    Route for level selection page.
+        - If the user has already selected a level, it is shown as selected.
+    """
     level = Level.FOUNDATION
     if 'session_id' in session:
         user = User.query.get(session['session_id'])
@@ -38,9 +51,12 @@ def level_get():
 
 @app.route('/level', methods=['POST'])
 def level_post():
+    """
+    Route for handling level selection POST requests.
+    """
     try:
         level = Level(int(request.form['level']))
-    except:
+    except ValueError:
         flash('Invalid level ' + request.form['level'])
         return redirect(url_for('level_get'))
     if 'session_id' in session:
@@ -64,18 +80,32 @@ def level_post():
 @app.route('/courses', methods=['GET'])
 @auth_required
 def courses_get():
+    """
+    Route for course selection page.
+    """
     user = User.query.get(session['session_id'])
     user_courses = user.user_courses
-    user_courses = {user_course.course_code: user_course.grade.value for user_course in user_courses}
+    user_courses = {
+        c.course_code: c.grade.value for c in user_courses
+    }
     courses = []
     for level in range(Level.FOUNDATION.value, user.level.value + 1):
         courses.extend(Course.query.filter_by(course_level=Level(level)).all())
     grades = Grade.__members__.values()
-    return render_template('courses.html', courses=courses, user_courses=user_courses, level=user.level, grades=grades)
+    return render_template(
+        'courses.html',
+        courses=courses,
+        user_courses=user_courses,
+        level=user.level,
+        grades=grades
+    )
 
 @app.route('/courses', methods=['POST'])
 @auth_required
 def courses_post():
+    """
+    Route for handling course selection POST requests.
+    """
     user = User.query.get(session['session_id'])
     invalid = False
     for course_code in request.form:
@@ -87,7 +117,6 @@ def courses_post():
         if request.form[course_code] == '0':
             if UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first():
                 db.session.delete(UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first())
-                db.session.commit()
             continue
         for c in Course.query.get(course_code).course_prereq:
             if c.prereq_code not in request.form or request.form[c.prereq_code] == '0':
@@ -100,7 +129,7 @@ def courses_post():
                 flash('Warning: You have not met the corequisites for ' + course_code + ', which is: ' + c.coreq_code)
         try:
             grade = Grade(int(request.form[course_code]))
-        except:
+        except ValueError:
             flash('Invalid grade for ' + course_code)
             invalid = True
         user_course = UserCourse.query.filter_by(session_id=session['session_id'], course_code=course_code).first()
@@ -119,22 +148,18 @@ def courses_post():
 @app.route('/cgpa', methods=['GET'])
 @auth_required
 def cgpa_get():
+    """
+    Route for displaying CGPA information.
+    """
     user = User.query.get(session['session_id'])
     if not user.cgpa:
         flash('You have not completed any courses')
         return redirect(url_for('courses_get'))
-    cgpa = user.cgpa
-    cgpa = round(cgpa, 2)
-    cgpa = '{:.2f}'.format(cgpa)
-    project_cgpa = user.project_cgpa
-    if project_cgpa:
-        project_cgpa = round(project_cgpa, 2)
-        project_cgpa = '{:.2f}'.format(project_cgpa)
-    else:
-        project_cgpa = 'N/A'
+    cgpa = f"{user.cgpa:.2f}"
+    project_cgpa = f"{user.project_cgpa:.2f}" if user.project_cgpa else 'N/A'
     user_courses = user.user_courses
     courses = Course.query.all()
-    courses = [ course for course in courses if course.course_code in [user_course.course_code for user_course in user_courses] ]
+    courses = [ c for c in courses if c.course_code in [uc.course_code for uc in user_courses] ]
     user_courses = {user_course.course_code: user_course.grade for user_course in user_courses}
     calculation_string = "CGPA = (\n"
     for course in courses:
@@ -146,12 +171,21 @@ def cgpa_get():
         calculation_string += str(course.course_credits) + " + "
     calculation_string = calculation_string[:-3]
     calculation_string += ") credits"
-    return render_template('cgpa.html', cgpa=cgpa, project_cgpa=project_cgpa, project_cgpa_color = ('black' if project_cgpa == 'N/A' else 'red' if float(project_cgpa) < 7 else 'green'),
-                            courses=courses, user_courses=user_courses, level=user.level,
-                              calculation_string=calculation_string)
+    return render_template('cgpa.html',
+                           cgpa=cgpa,
+                           project_cgpa=project_cgpa,
+                           project_cgpa_color = ('black' if project_cgpa == 'N/A' else 'red' if float(project_cgpa) < 7 else 'green'),
+                           courses=courses,
+                           user_courses=user_courses,
+                           level=user.level,
+                           calculation_string=calculation_string
+                        )
 
 @app.route('/forgetme', methods=['GET'])
 def forgetme():
+    """
+    Route for clearing user data and starting over.
+    """
     if 'session_id' in session:
         session.pop('session_id', None)
     return redirect(url_for('index'))
