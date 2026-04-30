@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    ports:
+      - "2472:2472"
+    volumes:
+      - ./.env:/app/.env:ro
+      - db:/app/instance
+    restart: unless-stopped
+
+volumes:
+  db:
