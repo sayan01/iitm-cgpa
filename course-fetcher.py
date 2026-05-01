@@ -61,4 +61,4 @@ for row in read_csv(DEGREE):
     })
 
 with open(OUTPUTFILE, 'w', encoding='utf-8') as op:
-    json.dump(courses, op)
+    json.dump(courses, op, indent=4)

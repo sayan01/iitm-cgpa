@@ -26,5 +26,5 @@ docker:
 gcp-build:
 	./scripts/build.sh
 
-gcp-deploy:
+gcp-deploy: gcp-build
 	./scripts/deploy.sh

@@ -14,7 +14,7 @@ BSCS2007,Machine Learning Techniques,Theory,4,BSCS2004,
 BSCS2008,Machine Learning Practice,Theory,4,,"BSCS2004,BSCS2007"
 BSCS2008P,Machine Learning Practice - Project,Project,2,BSCS2008,
 BSSE2002,Tools in Data Science,Theory,3,BSCS2008,
-BSMS2001P,Business Data Management - Project,Project Option 1,2,BSMS2001,
-BSMS2002,Business Analytics,Theory Option 1,4,,BSMS2001
-BSDA2001,Introduction to Deep Learning and Generative AI,Theory Option 2,4,BSCS2008,
-BSDA2001P,Deep Learning and Generative AI - Project,Project Option 2,2,"BSCS2008,BSDA2001",BSCS2007
+BSMS2001P,Business Data Management - Project [TRACK 1],Project,2,BSMS2001,
+BSMS2002,Business Analytics [TRACK 1],Theory,4,,BSMS2001
+BSDA2001,Introduction to Deep Learning and Generative AI [TRACK 2],Theory,4,BSCS2008,
+BSDA2001P,Deep Learning and Generative AI - Project [TRACK 2],Project,2,"BSCS2008,BSDA2001",BSCS2007
