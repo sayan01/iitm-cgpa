@@ -12,6 +12,7 @@ SERVICE=iitm-cgpa
 INSTANCE=iitm-cgpa-db
 IMAGE="${REGION}-docker.pkg.dev/${GCP_ID}/iitm-cgpa/app:latest"
 
+gcloud config set project "$GCP_ID"
 gcloud run deploy "$SERVICE" \
   --image "$IMAGE" \
   --region "$REGION" \
