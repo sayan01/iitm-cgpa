@@ -23,8 +23,11 @@ requirements:
 docker:
 	docker-compose up --build
 
+dropdb:
+	@./scripts/drop_db.sh
+
 gcp-build:
-	./scripts/build.sh
+	@./scripts/build.sh
 
 gcp-deploy: gcp-build
-	./scripts/deploy.sh
+	@./scripts/deploy.sh

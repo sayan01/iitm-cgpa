@@ -7,8 +7,7 @@ set -a
 source .env
 set +a
 
-REGION=asia-south1
-IMAGE="${REGION}-docker.pkg.dev/${GCP_ID}/iitm-cgpa/app:latest"
-
 gcloud config set project "$GCP_ID"
+gcloud auth application-default set-quota-project "$GCP_ID"
+
 gcloud builds submit --tag "$IMAGE"
