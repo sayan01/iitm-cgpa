@@ -8,6 +8,20 @@
             <h1 class="display-1 fw-bold cgpa cgpa-value">{{cgpa}}</h1>
         </div>
     </div>
+    <div class="donate-cta no-screenshot text-center my-4 mx-auto">
+        <p class="fs-5 mb-2">
+            <i class="fas fa-heart text-danger"></i>
+            Found this useful?
+        </p>
+        <p class="text-muted mb-3">
+            This calculator is free and not-for-profit. A small contribution
+            helps keep it online for the next batch of students.
+        </p>
+        <a href="{{ url_for('donate') }}" class="btn btn-outline-danger btn-lg">
+            <i class="fas fa-heart"></i>
+            Support the project
+        </a>
+    </div>
     <div class="details">
         <h2 class="display-5 fw-bold my-4">Details</h2>
         <h3 class=""><span class="fw-bold">Level: </span>{{level.name.capitalize()}}</h3>
@@ -133,6 +147,12 @@ captureButton.addEventListener("click", () => {
         font-size: clamp(0.5rem, 2.5vw, 1rem);
     }
     .download.style .details{
+    }
+    .donate-cta {
+        max-width: 32rem;
+    }
+    .download:not(.style) .no-screenshot {
+        display: none !important;
     }
 </style>
 {% endblock %}
