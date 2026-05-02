@@ -1,0 +1,269 @@
+{% extends 'parent.html' %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">
+            <i class="fas fa-heart text-danger"></i>
+            Support IITM-CGPA
+        </h1>
+        <p class="fs-5 text-muted mt-3">
+            This calculator is a free, not-for-profit tool built for fellow IITM BS students.
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="fw-bold mb-3">Why Donate?</h2>
+                    <p class="fs-5 text-justify mb-3">
+                        IITM-CGPA is built and maintained as a free service for students of the
+                        IITM BS programme. It is <strong>not affiliated with IITM</strong> and earns
+                        no revenue. There are no ads, no trackers, and no paywalls — just a tool
+                        that does one thing and does it well.
+                    </p>
+                    <p class="fs-5 text-justify mb-3">
+                        Keeping it online costs real money:
+                    </p>
+                    <ul class="fs-5">
+                        <li>Cloud hosting and database servers</li>
+                        <li>Domain renewal each year</li>
+                        <li>Time spent on updates as the curriculum evolves</li>
+                    </ul>
+                    <p class="fs-5 text-justify mb-0">
+                        If this tool saved you time or made your life a little easier, a small
+                        contribution helps keep it running for the next batch of students. Every
+                        rupee goes directly toward hosting and upkeep.
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="fw-bold text-center mb-4">Ways to Contribute</h2>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm border-0 donate-card">
+                        <div class="card-body text-center p-4 d-flex flex-column">
+                            <div class="icon-wrap mb-3">
+                                <i class="fas fa-mobile-alt fa-3x text-primary"></i>
+                            </div>
+                            <h3 class="fw-bold">UPI</h3>
+                            <p class="text-muted mb-3">
+                                The easiest way for students in India. Send any amount you like.
+                            </p>
+                            <p class="text-muted small mb-3">
+                                On mobile, tap "Pay via UPI" to open your UPI app.
+                                On desktop, scan the QR with your phone.
+                            </p>
+                            <p class="upi-id mb-3">
+                                <code>sayandonate@ybl</code>
+                            </p>
+                            <div class="d-flex gap-2 mt-auto">
+                                <a href="upi://pay?pa=sayandonate@ybl&pn=IITM-CGPA&cu=INR"
+                                   class="btn btn-primary btn-lg flex-fill">
+                                    <i class="fas fa-rupee-sign"></i>
+                                    Pay via UPI
+                                </a>
+                                <button type="button" class="btn btn-outline-primary btn-lg flex-fill"
+                                        data-bs-toggle="modal" data-bs-target="#qrModal">
+                                    <i class="fas fa-qrcode"></i>
+                                    Show QR
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm border-0 donate-card">
+                        <div class="card-body text-center p-4 d-flex flex-column">
+                            <div class="icon-wrap mb-3">
+                                <i class="fab fa-github fa-3x"></i>
+                            </div>
+                            <h3 class="fw-bold">GitHub Sponsors</h3>
+                            <p class="text-muted mb-3">
+                                For international supporters, or those who prefer
+                                cards over UPI. Pay in USD via GitHub.
+                            </p>
+                            <ul class="sponsor-perks list-unstyled text-start small mb-3">
+                                <li>
+                                    <i class="fas fa-check text-success"></i>
+                                    One-time tip or monthly support
+                                </li>
+                                <li>
+                                    <i class="fas fa-check text-success"></i>
+                                    Tiers starting at $1 / month
+                                </li>
+                                <li>
+                                    <i class="fas fa-check text-success"></i>
+                                    Listed as a sponsor on GitHub
+                                </li>
+                                <li>
+                                    <i class="fas fa-check text-success"></i>
+                                    Goes directly toward hosting &amp; upkeep
+                                </li>
+                            </ul>
+                            <div class="sponsor-btn-wrap mt-auto">
+                                <iframe src="https://github.com/sponsors/sayan01/button"
+                                        title="Sponsor sayan01"
+                                        height="32" width="114"
+                                        style="border: 0; border-radius: 6px;"></iframe>
+                                <a href="https://github.com/sponsors/sayan01"
+                                   target="_blank" rel="noopener"
+                                   class="text-muted small d-block mt-2">
+                                    github.com/sponsors/sayan01
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0 donate-card spread-card">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center g-4">
+                                <div class="col-md-3 text-center">
+                                    <i class="fas fa-bullhorn fa-4x text-success"></i>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3 class="fw-bold">Spread the Word</h3>
+                                    <p class="text-muted mb-0">
+                                        Can't donate? Share this tool with classmates, or
+                                        star the repo on GitHub. Word-of-mouth keeps it
+                                        useful for the next batch of students.
+                                    </p>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <a href="https://github.com/sayan01/iitm-cgpa"
+                                       target="_blank" rel="noopener"
+                                       class="btn btn-success btn-lg w-100">
+                                        <i class="fas fa-star"></i>
+                                        Star on GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 bg-light">
+                <div class="card-body p-4 text-center">
+                    <p class="mb-1 fs-5">
+                        <i class="fas fa-envelope text-secondary"></i>
+                        Questions or want a different payment method?
+                    </p>
+                    <p class="mb-0">
+                        Drop a note at
+                        <a href="mailto:sgic2001@gmail.com">sgic2001@gmail.com</a>
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-center text-muted mt-4 mb-0">
+                <small>
+                    Thank you to everyone who has contributed.
+                    The tool stays free for all students because of you.
+                </small>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="qrModalLabel">
+                    <i class="fas fa-qrcode text-primary"></i>
+                    Scan to Pay
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center pt-0">
+                <p class="text-muted mb-3">
+                    Open any UPI app on your phone (GPay, PhonePe, Paytm, etc.)
+                    and scan this code.
+                </p>
+                <div class="qr-modal-wrap">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data=upi%3A%2F%2Fpay%3Fpa%3Dsayandonate%40ybl%26pn%3DIITM-CGPA%26cu%3DINR"
+                         alt="UPI QR code for sayandonate@ybl"
+                         width="300" height="300"
+                         class="qr-img-large">
+                </div>
+                <p class="upi-id mt-3 mb-0">
+                    <code>sayandonate@ybl</code>
+                </p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+{% endblock %}
+
+{% block style %}
+<style>
+    .text-justify {
+        text-align: justify;
+    }
+    .donate-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .donate-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    .icon-wrap {
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .upi-id code {
+        background: #f1f3f5;
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.4rem;
+        font-size: 1.05rem;
+        color: #a61e4d;
+    }
+    .qr-img-large {
+        background: #fff;
+        padding: 0.5rem;
+        border: 1px solid #e9ecef;
+        border-radius: 0.6rem;
+        max-width: 100%;
+        height: auto;
+    }
+    .sponsor-btn-wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 40px;
+    }
+    .sponsor-perks {
+        max-width: 18rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .sponsor-perks li {
+        padding: 0.25rem 0;
+    }
+    .sponsor-perks i {
+        width: 1.25rem;
+        margin-right: 0.25rem;
+    }
+    .spread-card .col-md-3 .fa-bullhorn {
+        color: #198754 !important;
+    }
+</style>
+{% endblock %}

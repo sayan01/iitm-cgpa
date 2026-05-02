@@ -35,6 +35,13 @@ def about():
     """
     return render_template('about.html')
 
+@app.route('/donate')
+def donate():
+    """
+    Route for the donate page.
+    """
+    return render_template('donate.html')
+
 @app.route('/level', methods=['GET'])
 def level_get():
     """
